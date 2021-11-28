@@ -1,3 +1,5 @@
+local VERSION = "1.2.0"
+
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
 --interfere with how costumes look while allowing customization between different characters with ease.
@@ -188,7 +190,7 @@ local function costumeError(playerType, list, whitelistType)
 	end
 end
 
-function costumeProtector:ItemCostumeWhitelist(playerType, itemList)
+function costumeProtector:AddItemCostumeWhitelist(playerType, itemList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and itemList ~= nil 
@@ -202,7 +204,7 @@ function costumeProtector:ItemCostumeWhitelist(playerType, itemList)
 	end
 end
 
-function costumeProtector:NullEffectWhitelist(playerType, nullItemList)
+function costumeProtector:AddNullEffectWhitelist(playerType, nullItemList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and nullItemList ~= nil
@@ -216,7 +218,7 @@ function costumeProtector:NullEffectWhitelist(playerType, nullItemList)
 	end
 end
 
-function costumeProtector:TrinketCostumeWhitelist(playerType, trinketList)
+function costumeProtector:AddTrinketCostumeWhitelist(playerType, trinketList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and trinketList ~= nil
