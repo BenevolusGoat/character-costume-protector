@@ -61,11 +61,15 @@ local CallbacksTable = {
 local function apiError(isBasic, func, invalidVar, num, expectedType)
 	if isBasic == true and func ~= nil then
 		local err = "(CCP) Something went wrong in "..func.."!"
+		error(err)
+		Isaac.DebugString(err)
 	elseif not isBasic then
 		if invalidVar == nil
 		or type(invalidVar) ~= expectedType
 		then
-			err = "Bad Argument #"..num.." in "..func.."(Attempt to index a " .. type(invalidVar) .. " value, field '" .. tostring(invalidVar) .. "', expected "..expectedType..)"."
+			err = "Bad Argument #"..num.." in "..func.."(Attempt to index a " .. type(invalidVar) .. " value, field '" .. tostring(invalidVar) .. "', expected "..expectedType..")."
+			error(err)
+			Isaac.DebugString(err)
 		end
 	end
 end
@@ -100,7 +104,7 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 		initiateItemWhitelist(playerType)
 		initiateNullItemWhitelist(playerType)
 		playerTrinketCostumeWhitelist[playerType] = {}
-			
+
 		if costumeFlight ~= nil then
 			playerCostume[playerType]["Flight"] = costumeFlight
 		end
@@ -216,7 +220,7 @@ function costumeProtector:ItemCostumeWhitelist(playerType, costumeList)
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
 		elseif costumeList == nil
-		or type(costumeList) ~= "table"
+		or type(costumeList) ~= "table" then
 			apiError(false, func, costumeList, "2", "table")
 		else
 			apiError(true, func)
@@ -245,7 +249,7 @@ function costumeProtector:NullEffectWhitelist(playerType, costumeList)
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
 		elseif costumeList == nil
-		or type(costumeList) ~= "table"
+		or type(costumeList) ~= "table" then
 			apiError(false, func, costumeList, "2", "table")
 		else
 			apiError(true, func)
@@ -274,7 +278,7 @@ function costumeProtector:TrinketCostumeWhitelist(playerType, costumeList)
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
 		elseif costumeList == nil
-		or type(costumeList) ~= "table"
+		or type(costumeList) ~= "table" then
 			apiError(false, func, costumeList, "2", "table")
 		else
 			apiError(true, func)
