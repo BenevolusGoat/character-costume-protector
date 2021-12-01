@@ -1,4 +1,4 @@
-local VERSION = "1.2.1"
+local VERSION = "1.2.2"
 
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
