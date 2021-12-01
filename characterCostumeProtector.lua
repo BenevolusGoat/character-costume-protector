@@ -854,7 +854,7 @@ end
 
 function ccp:resetOnMissingNoNewFloor(player)
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_MISSING_NO) then
-		ccp:MainResetPlayerCostumes(player)
+		ccp:mainResetPlayerCostumes(player)
 	end
 end
 
@@ -908,7 +908,7 @@ function ccp:delayInCostumeReset(player)
 	local data = player:GetData()
 
 	if data.CCP.DelayCostumeReset and data.CCP.DelayCostumeReset then
-		ccp:MainResetPlayerCostumes(player)
+		ccp:mainResetPlayerCostumes(player)
 		data.CCP.DelayCostumeReset = nil
 	end
 	
