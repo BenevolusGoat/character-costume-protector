@@ -6,7 +6,6 @@ local VERSION = "1.2.1"
 
 --For any questions, contact Sanio or leave a comment under the workshop upload, preferably the latter.
 
-local costumeProtector = {}
 local ccp = {}
 local game = Game()
 
@@ -60,7 +59,7 @@ local CallbacksTable = {
 
 local function apiError(isBasic, func, invalidVar, num, expectedType)
 	if isBasic == true and func ~= nil then
-		local err = "(CCP) Something went wrong in "..func.."!"
+		local err = "(CCP) Something went wrong in ccp:"..func.."!"
 		error(err)
 		Isaac.DebugString(err)
 	elseif not isBasic then
@@ -88,7 +87,7 @@ local function initiateNullItemWhitelist(playerType)
 	end
 end
 
-function costumeProtector:AddPlayer(
+function ccp:addPlayer(
 player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costumeExtra
 )
 	if player ~= nil
@@ -133,7 +132,7 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 			ccp:afterCostumeInit(player)
 		end
 	else
-		local func = "costumeProtector:AddPlayer"
+		local func = "AddPlayer"
 		if player == nil
 		or type(player) ~= "userdata"
 		then
@@ -152,7 +151,7 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 	end
 end
 
-function costumeProtector:UpdatePlayer(
+function ccp:updatePlayer(
 player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costumeExtra
 )
 	if player ~= nil
@@ -184,7 +183,7 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 		
 		ccp:mainResetPlayerCostumes(player)
 	else
-		local func = "costumeProtector:UpdatePlayer"
+		local func = "UpdatePlayer"
 		if player == nil
 		or type(player) ~= "userdata"
 		then
@@ -199,7 +198,7 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 	end
 end
 
-function costumeProtector:ItemCostumeWhitelist(playerType, costumeList)
+function ccp:itemCostumeWhitelist(playerType, costumeList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and costumeList ~= nil 
@@ -215,7 +214,7 @@ function costumeProtector:ItemCostumeWhitelist(playerType, costumeList)
 			end
 		end
 	else
-		local func = "costumeProtector:ItemCostumeWhitelist"
+		local func = "ItemCostumeWhitelist"
 		if playerType == nil
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
@@ -228,7 +227,7 @@ function costumeProtector:ItemCostumeWhitelist(playerType, costumeList)
 	end
 end
 
-function costumeProtector:NullEffectWhitelist(playerType, costumeList)
+function ccp:nullEffectWhitelist(playerType, costumeList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and costumeList ~= nil
@@ -244,7 +243,7 @@ function costumeProtector:NullEffectWhitelist(playerType, costumeList)
 			end
 		end
 	else
-		local func = "costumeProtector:NullEffectWhitelist"
+		local func = "NullEffectWhitelist"
 		if playerType == nil
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
@@ -257,7 +256,7 @@ function costumeProtector:NullEffectWhitelist(playerType, costumeList)
 	end
 end
 
-function costumeProtector:TrinketCostumeWhitelist(playerType, costumeList)
+function ccp:trinketCostumeWhitelist(playerType, costumeList)
 	if playerType ~= nil
 	and type(playerType) == "number"
 	and costumeList ~= nil
@@ -273,7 +272,7 @@ function costumeProtector:TrinketCostumeWhitelist(playerType, costumeList)
 			end
 		end
 	else
-		local func = "costumeProtector:TrinketCostumeWhitelist"
+		local func = "TrinketCostumeWhitelist"
 		if playerType == nil
 		or type(playerType) ~= "number" then
 			apiError(false, func, player, "1", "userdata")
@@ -286,11 +285,11 @@ function costumeProtector:TrinketCostumeWhitelist(playerType, costumeList)
 	end
 end
 
-function costumeProtector.AddCallback(callback, newFunction)
+function ccp.addCallback(callback, newFunction)
 	if CallbacksTable[callback] then
 		table.insert(CallbacksTable[callback], newFunction)
 	else
-		error("Bad Argument #1 in costumeProtector.AddCallback (Attempt to index a " .. type(callback) .. "value, field '" .. tostring(callback) .. "'")
+		error("Bad Argument #1 in ccp.AddCallback (Attempt to index a " .. type(callback) .. "value, field '" .. tostring(callback) .. "'")
 	end
 end
 
@@ -925,7 +924,7 @@ end
 --  INITIATING CALLBACKS  --
 ----------------------------
 
-function costumeProtector:Init(mod)
+function ccp:init(mod)
 	mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, player)
 		local playerType = player:GetPlayerType()
 		local data = player:GetData()
@@ -977,4 +976,12 @@ function costumeProtector:Init(mod)
 	end
 end
 
-return costumeProtector
+return {
+	Init = ccp.init,
+	AddPlayer = ccp.addPlayer,
+	UpdatePlayer = ccp.updatePlayer,
+	ItemCostumeWhitelist = ccp.itemCostumeWhitelist,
+	NullEffectWhitelist = ccp.nullEffectWhitelist,
+	TrinketCostumeWhitelist = ccp.trinketCostumeWhitelist,
+	AddCallback = ccp.addCallback
+}
