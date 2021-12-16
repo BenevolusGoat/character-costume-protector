@@ -1,4 +1,4 @@
-local VERSION = "1.2.3"
+local VERSION = "1.2.3.1"
 
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
@@ -363,6 +363,7 @@ local collectiblesEffectsOnlyAddOnEffect = {
 
 local activesToDelayCostumeReset = {
 	[CollectibleType.COLLECTIBLE_RAZOR_BLADE] = true,
+	[CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL] = true,
 	[CollectibleType.COLLECTIBLE_MOMS_BRA] = true,
 	[CollectibleType.COLLECTIBLE_THE_NAIL] = true,
 	[CollectibleType.COLLECTIBLE_MY_LITTLE_UNICORN] = true,
@@ -755,7 +756,7 @@ function ccp:miscCostumeResets(player)
 	
 	if data.CCP.NumTemporaryEffects
 	and data.CCP.NumTemporaryEffects ~= player:GetEffects():GetEffectsList().Size
-	and returnOnHemoptysis(player)
+	and not returnOnHemoptysis(player)
 	then
 		data.CCP.NumTemporaryEffects = player:GetEffects():GetEffectsList().Size
 		ccp:mainResetPlayerCostumes(player)
