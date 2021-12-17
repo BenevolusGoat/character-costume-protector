@@ -549,7 +549,7 @@ local function addItemSpecificCostumes(player)
 	
 	--Empty Vessel
 	if playerEffects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_EMPTY_VESSEL)
-	and playerItemCostumeWhitelist[playerType][CollectibleType.COLLECTIBLE_EMPTY_VESSEL] == true then
+	and playerNullItemCostumeWhitelist[playerType][NullItemID.ID_EMPTY_VESSEL] == true then
 		player:AddNullCostume(NullItemID.ID_EMPTY_VESSEL)
 	end
 	
