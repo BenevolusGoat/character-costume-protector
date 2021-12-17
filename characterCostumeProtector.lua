@@ -373,6 +373,7 @@ end
 
 local collectiblesEffectsOnlyAddOnEffect = {
 	[CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON] = true,
+	[CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL] = true,
 	[CollectibleType.COLLECTIBLE_MOMS_BRA] = true,
 	[CollectibleType.COLLECTIBLE_EMPTY_VESSEL] = true,
 	[CollectibleType.COLLECTIBLE_RAZOR_BLADE] = true,
@@ -396,7 +397,6 @@ local activesToDelayCostumeReset = {
 	[CollectibleType.COLLECTIBLE_D4] = true,
 	[CollectibleType.COLLECTIBLE_D100] = true,
 	[CollectibleType.COLLECTIBLE_DELIRIOUS] = true,
-	
 }
 
 local costumeTrinkets = {
