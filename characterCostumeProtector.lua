@@ -190,6 +190,28 @@ player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costume
 	end
 end
 
+function ccp:removePlayer(player, playerType)
+	if playerToProtect[playerType] then
+		ccp:removeCCPPlayer(player)
+		playerToProtect[playerType] = nil
+		playerCostume[playerType] = nil
+		playerSpritesheet[playerType] = nil
+		playerItemCostumeWhitelist[playerType] = nil
+		playerNullItemCostumeWhitelist[playerType] = nil
+		playerTrinketCostumeWhitelist[playerType] = nil
+	else
+		local err = "RemovePlayer failed. PlayerType isn't inside protection system!"
+		error(err)
+		Isaac.DebugString(err)
+	end
+end
+
+function ccp:removeAllPlayers(player)
+	for playerType, _ in pairs(playerToProtect) do
+		ccp:removePlayer(player, playerType)
+	end
+end
+
 function ccp:updatePlayer(
 player, playerType, spritesheetNormal, costumeFlight, spritesheetFlight, costumeExtra
 )
@@ -602,7 +624,7 @@ end
 
 local function tryRemoveOldCostume(player, playerType)
 	local basePath = playerCostume[playerType]
-	
+
 	if basePath ~= nil then
 		if basePath["Flight"] ~= nil then
 			player:TryRemoveNullCostume(basePath["Flight"])
@@ -631,7 +653,13 @@ function ccp:canAddCollectibleCostume(player, itemID)
 	if (player:HasCollectible(itemID) or player:GetEffects():HasCollectibleEffect(itemID)) 
 	and not collectiblesEffectsOnlyAddOnEffect[itemID]
 	then
-		return true
+		local item = Isaac.GetItemConfig():GetCollectible(itemID)
+		if item ~= nil then
+			local costume = item.Costume.Anm2Path
+			if costume ~= "" then
+				canAdd = true
+			end
+		end
 	end
 	
 	return canAdd
@@ -639,7 +667,7 @@ end
 
 function ccp:mainResetPlayerCostumes(player)
 	local playerType = player:GetPlayerType()
-	
+
 	if (REPENTANCE and playerToProtect[playerType] == true and not player:IsCoopGhost()) or (not REPENTANCE and playerToProtect[playerType] == true) then
 	
 		player:ClearCostumes()
@@ -660,60 +688,62 @@ function ccp:mainResetPlayerCostumes(player)
 	end
 end
 
-function ccp:addAllCostumes(player)
+function ccp:removeCCPPlayer(player)
 	local data = player:GetData()
 	local playerEffects = player:GetEffects()
 	
-	
-	for playerType, _ in pairs(data.CCP.HasCostumeInitialized) do
-	
-		tryRemoveOldCostume(player, playerType)
-		
-		--Item Costumes
-		for itemID = 1, CollectibleType.NUM_COLLECTIBLES do
-			local itemCostume = Isaac.GetItemConfig():GetCollectible(itemID)
-			if ccp:canAddCollectibleCostume(player, itemID)
-			and not playerItemCostumeWhitelist[playerType][itemID] then
-				player:AddCostume(itemCostume, false)
-			end
-		end
+	if data.CCP and data.CCP.HasCostumeInitialized then
+		for playerType, _ in pairs(data.CCP.HasCostumeInitialized) do
+			
+			tryRemoveOldCostume(player, playerType)
 
-		--Item Costumes Only On Effect
-		for itemID, boolean in pairs(collectiblesEffectsOnlyAddOnEffect) do
-			if playerEffects:HasCollectibleEffect(itemID)
-			and not playerItemCostumeWhitelist[playerType][itemID] then
-				player:AddCostume(itemCostume)
+			--Item Costumes
+			for itemID = 1, CollectibleType.NUM_COLLECTIBLES do
+				local itemCostume = Isaac.GetItemConfig():GetCollectible(itemID)
+				if ccp:canAddCollectibleCostume(player, itemID)
+				and not playerItemCostumeWhitelist[playerType][itemID] then
+					player:AddCostume(itemCostume, false)
+				end
 			end
-		end
-		
-		--Null Costumes
-		for nullItemID = 1, NullItemID.NUM_NULLITEMS do
-			if playerEffects:HasNullEffect(nullItemID)
-			and not nullEffectsBlacklist[nullItemID] 
-			and not playerNullItemCostumeWhitelist[playerType][itemID]then
-				player:AddNullCostume(nullItemID)
+			
+			--Item Costumes Only On Effect
+			for itemID, boolean in pairs(collectiblesEffectsOnlyAddOnEffect) do
+				if playerEffects:HasCollectibleEffect(itemID)
+				and not playerItemCostumeWhitelist[playerType][itemID] then
+					player:AddCostume(itemCostume)
+				end
 			end
-		end
-		
-		--Trinkets
-		for trinketID, _ in pairs(costumeTrinkets) do
-			if ((trinketID == TrinketType.TRINKET_TICK
-			and player:HasTrinket(trinketID))
-			or playerEffects:HasTrinketEffect(trinketID))
-			and data.CCP.TrinketActive[trinketID]
-			and not playerTrinketCostumeWhitelist[playerType][trinketID] then
-				local trinketCostume = Isaac.GetItemConfig():GetTrinket(trinketID)
-				player:AddCostume(trinketCostume)
+			
+			--Null Costumes
+			for nullItemID = 1, NullItemID.NUM_NULLITEMS do
+				if playerEffects:HasNullEffect(nullItemID)
+				and not nullEffectsBlacklist[nullItemID] 
+				and not playerNullItemCostumeWhitelist[playerType][itemID]then
+					player:AddNullCostume(nullItemID)
+				end
 			end
-		end
-		
-		--Transformations
-		for playerForm, nullItemID in pairs(playerFormToNullItemID) do
-			if player:HasPlayerForm(playerForm) then
-				player:AddNullCostume(nullItemID)
+			
+			--Trinkets
+			for trinketID, _ in pairs(costumeTrinkets) do
+				if ((trinketID == TrinketType.TRINKET_TICK
+				and player:HasTrinket(trinketID))
+				or playerEffects:HasTrinketEffect(trinketID))
+				and data.CCP.TrinketActive[trinketID]
+				and not playerTrinketCostumeWhitelist[playerType][trinketID] then
+					local trinketCostume = Isaac.GetItemConfig():GetTrinket(trinketID)
+					player:AddCostume(trinketCostume)
+				end
+			end
+			
+			--Transformations
+			for playerForm, nullItemID in pairs(playerFormToNullItemID) do
+				if player:HasPlayerForm(playerForm) then
+					player:AddNullCostume(nullItemID)
+				end
 			end
 		end
 	end
+	data.CCP = nil
 end
 
 function ccp:deinitPlayerCostume(player)
@@ -724,8 +754,7 @@ function ccp:deinitPlayerCostume(player)
 	and data.CCP.HasCostumeInitialized --Has the protection data
 	and not data.CCP.HasCostumeInitialized[playerType] --For other characters given protection in their own copy of the library
 	and not playerToProtect[playerType] then --PlayerType isn't in local protection system
-		ccp:addAllCostumes(player)
-		data.CCP = nil
+		ccp:removeCCPPlayer(player)
 		ccp:afterCostumeDeinit(player)
 	end
 end
@@ -958,6 +987,10 @@ end
 ----------------------------
 
 function ccp:init(mod)
+	mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player)
+		ccp:removeAllPlayers(player)
+	end)
+	
 	mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, player)
 		local playerType = player:GetPlayerType()
 		local data = player:GetData()
@@ -1012,6 +1045,8 @@ end
 return {
 	Init = ccp.init,
 	AddPlayer = ccp.addPlayer,
+	RemovePlayer = ccp.removePlayer,
+	RemoveAllPlayers = ccp.removeAllPlayers,
 	UpdatePlayer = ccp.updatePlayer,
 	ItemCostumeWhitelist = ccp.itemCostumeWhitelist,
 	NullEffectWhitelist = ccp.nullEffectWhitelist,
