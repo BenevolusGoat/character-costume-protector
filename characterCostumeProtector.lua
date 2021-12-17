@@ -1,4 +1,4 @@
-local VERSION = "1.2.4"
+local VERSION = "1.2.5"
 
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
@@ -871,7 +871,7 @@ function ccp:resetOnCoopRevive(player)
 	if player:IsCoopGhost() and not data.CCP.WaitOnCoopRevive then
 		data.CCP.WaitOnCoopRevive = true
 	elseif not player:IsCoopGhost() and data.CCP.WaitOnCoopRevive then
-		ccp:ReAddBaseCosutme(player)
+		ccp:mainResetPlayerCostumes(player)
 		data.CCP.WaitOnCoopRevive = false
 	end
 end
