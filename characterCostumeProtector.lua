@@ -1,4 +1,4 @@
-local VERSION = "1.2.5"
+--VERSION = "1.2.6"
 
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
@@ -799,9 +799,22 @@ function ccp:miscCostumeResets(player)
 			if not data.CCP.TrinketActive[trinketID] then
 				if not playerTrinketCostumeWhitelist[playerType][trinketID] then
 					local trinketCostume = Isaac.GetItemConfig():GetTrinket(trinketID)
-					player:RemoveCostume(trinketCostume)
-				end	
-				data.CCP.TrinketActive[trinketID] = true
+					if trinketID == TrinketType.TRINKET_TICK then
+						if player.QueuedItem.Item then
+							if player.QueuedItem.Item.ID == TrinketType.TRINKET_TICK then
+								data.CCP.DelayTick = true
+							end
+						else
+							if data.CCP.DelayTick then
+								player:RemoveCostume(trinketCostume)
+								data.CCP.DelayTick = false
+								data.CCP.TrinketActive[trinketID] = true
+							end
+						end
+					else
+						player:RemoveCostume(trinketCostume)
+					end
+				end
 			end
 		elseif (trinketID == TrinketType.TRINKET_TICK
 		and not player:HasTrinket(trinketID))
@@ -995,7 +1008,9 @@ function ccp:init(mod)
 		local playerType = player:GetPlayerType()
 		local data = player:GetData()
 		
-		ccp:deinitPlayerCostume(player)
+		if game:GetFrameCount() > 1 then
+			ccp:deinitPlayerCostume(player)
+		end
 		
 		if playerToProtect[playerType] == true and data.CCP then
 			ccp:removeOldCCPData(player)
