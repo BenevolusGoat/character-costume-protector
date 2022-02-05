@@ -1019,6 +1019,8 @@ function ccp:restoreCostumeInMineshaft(player)
 			and data.CCP.MineshaftBodyCostume then
 			data.CCP.MineshaftHeadCostume = nil
 			data.CCP.MineshaftBodyCostume = nil
+			data.CCP.MineshaftHead = nil
+			data.CCP.MineshaftBody = nil
 		end
 	end
 end
