@@ -1,4 +1,4 @@
---VERSION = "1.4.1"
+--VERSION = "1.4.2"
 
 --Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
@@ -16,6 +16,7 @@ local playerItemCostumeWhitelist = {}
 local playerNullItemCostumeWhitelist = {}
 local playerTrinketCostumeWhitelist = {}
 local defaultItemWhitelist = {
+	[CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS] = true,
 	[CollectibleType.COLLECTIBLE_HOLY_MANTLE] = true,
 	[CollectibleType.COLLECTIBLE_DADS_RING] = true,
 }
@@ -362,6 +363,7 @@ end
 --------------
 
 local collectiblesEffectsOnlyAddOnEffect = {
+	[CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS] = true,
 	[CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON] = true,
 	[CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL] = true,
 	[CollectibleType.COLLECTIBLE_MOMS_BRA] = true,
@@ -884,7 +886,6 @@ function ccp:resetCostumeOnItem(
 			end
 		end
 	end
-	return false
 end
 
 function ccp:resetOnCoopRevive(player)
