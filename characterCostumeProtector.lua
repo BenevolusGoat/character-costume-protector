@@ -1,6 +1,6 @@
 --VERSION = "1.4.2"
 
---Character Costume Protector by Sanio! (Sanio46 on Steam and Twitter)
+--Character Costume Protector by Benny! (BenevolusGoat on Steam and Bluesky)
 --This local library has the goal of protecting the unique looks of custom characters that regularly
 --interfere with how costumes look while allowing customization between different characters with ease.
 
